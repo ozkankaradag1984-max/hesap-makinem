@@ -1,0 +1,30 @@
+name: APK Oluşturucu
+on:
+  workflow_dispatch: # Bu sayede butona basarak başlatabileceğiz
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Kodları Çek
+        uses: actions/checkout@v3
+
+      - name: Node.js Kur
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Bubblewrap Kur
+        run: npm install -g @bubblewrap/cli
+
+      - name: APK Paketle
+        # Bu aşamada hata almamak için tüm ayarları otomatik yapıyoruz
+        run: |
+          yes | bubblewrap init --manifest=manifest.json
+          yes | bubblewrap build --skipSigning
+          
+      - name: APK Dosyasını Kaydet
+        uses: actions/upload-artifact@v3
+        with:
+          name: HesapMakinesiAPK
+          path: ./*.apk
