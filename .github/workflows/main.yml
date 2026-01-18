@@ -1,6 +1,6 @@
 name: APK Oluşturucu
 on:
-  workflow_dispatch: # Bu sayede butona basarak başlatabileceğiz
+  workflow_dispatch:
 
 jobs:
   build:
@@ -14,14 +14,18 @@ jobs:
         with:
           node-version: 18
 
-      - name: Bubblewrap Kur
-        run: npm install -g @bubblewrap/cli
+      - name: Bubblewrap ve Gereksinimleri Kur
+        run: |
+          npm install -g @bubblewrap/cli
+          mkdir -p ~/.bubblewrap
+          # Gerekli ayarları önceden oluşturarak soru sormasını engelliyoruz
+          echo '{"jdkPath":"/usr/lib/jvm/java-11-openjdk-amd64","androidSdkPath":"/usr/local/lib/android/sdk"}' > ~/.bubblewrap/config.json
 
       - name: APK Paketle
-        # Bu aşamada hata almamak için tüm ayarları otomatik yapıyoruz
         run: |
-          yes | bubblewrap init --manifest=manifest.json
-          yes | bubblewrap build --skipSigning
+          # Soru sormaması için tüm ayarları komut satırından veriyoruz
+          bubblewrap init --manifest=manifest.json --metaData='{"no_prompt":true}' --now
+          bubblewrap build --skipSigning
           
       - name: APK Dosyasını Kaydet
         uses: actions/upload-artifact@v3
