@@ -9,28 +9,25 @@ jobs:
       - name: Kodları Çek
         uses: actions/checkout@v4
 
-      - name: Java Kur
+      - name: Java ve Node Kur
         uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Node.js Kur
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-
-      - name: APK Oluştur (Süper Hızlı)
+      - name: Bubblewrap Kur ve Ayarla
         run: |
           npm install -g @bubblewrap/cli
           mkdir -p ~/.bubblewrap
-          # Tüm ayarları manuel enjekte ediyoruz ki soru sormasın
+          # Yol tanımlamalarını yapıyoruz
           echo '{"jdkPath":"/usr/lib/jvm/java-17-openjdk-amd64","androidSdkPath":"/usr/local/lib/android/sdk"}' > ~/.bubblewrap/config.json
-          
-          # 'yes' komutunu en başa koyarak her şeye otomatik 'evet' diyoruz
+
+      - name: APK Paketle (Sessiz Mod)
+        run: |
+          # Bu komut tüm lisansları ve soruları otomatik 'evet' ile geçer
           yes | bubblewrap init --manifest=https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/manifest.json --now
           yes | bubblewrap build --skipSigning
-
+          
       - name: APK Dosyasını Kaydet
         uses: actions/upload-artifact@v4
         with:
