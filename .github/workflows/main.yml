@@ -7,28 +7,27 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Kodları Çek
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4 # v4'e yükseltildi
 
       - name: Node.js Kur
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4 # v4'e yükseltildi
         with:
-          node-version: 18
+          node-version: 20 # Daha güncel Node sürümü
 
       - name: Bubblewrap ve Gereksinimleri Kur
         run: |
           npm install -g @bubblewrap/cli
           mkdir -p ~/.bubblewrap
-          # Gerekli ayarları önceden oluşturarak soru sormasını engelliyoruz
-          echo '{"jdkPath":"/usr/lib/jvm/java-11-openjdk-amd64","androidSdkPath":"/usr/local/lib/android/sdk"}' > ~/.bubblewrap/config.json
+          echo '{"jdkPath":"/usr/lib/jvm/java-17-openjdk-amd64","androidSdkPath":"/usr/local/lib/android/sdk"}' > ~/.bubblewrap/config.json
 
       - name: APK Paketle
         run: |
-          # Soru sormaması için tüm ayarları komut satırından veriyoruz
+          # --yes komutu ile tüm soruları otomatik onaylıyoruz
           bubblewrap init --manifest=manifest.json --metaData='{"no_prompt":true}' --now
           bubblewrap build --skipSigning
           
       - name: APK Dosyasını Kaydet
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4 # Hata veren v3, v4 ile değiştirildi
         with:
           name: HesapMakinesiAPK
           path: ./*.apk
