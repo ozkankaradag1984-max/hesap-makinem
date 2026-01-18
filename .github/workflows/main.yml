@@ -7,12 +7,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Kodları Çek
-        uses: actions/checkout@v4 # v4'e yükseltildi
+        uses: actions/checkout@v4
 
       - name: Node.js Kur
-        uses: actions/setup-node@v4 # v4'e yükseltildi
+        uses: actions/setup-node@v4
         with:
-          node-version: 20 # Daha güncel Node sürümü
+          node-version: 20
 
       - name: Bubblewrap ve Gereksinimleri Kur
         run: |
@@ -22,12 +22,13 @@ jobs:
 
       - name: APK Paketle
         run: |
-          # --yes komutu ile tüm soruları otomatik onaylıyoruz
-          bubblewrap init --manifest=manifest.json --metaData='{"no_prompt":true}' --now
+          # ÖNEMLİ: Aşağıdaki 'KULLANICI_ADIN' ve 'DEPO_ADIN' kısımlarını kendi bilgilerine göre düzelt!
+          # Örnek: https://ozkankaradag1984-max.github.io/hesap-makinem/manifest.json
+          bubblewrap init --manifest=https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/manifest.json --now
           bubblewrap build --skipSigning
           
       - name: APK Dosyasını Kaydet
-        uses: actions/upload-artifact@v4 # Hata veren v3, v4 ile değiştirildi
+        uses: actions/upload-artifact@v4
         with:
           name: HesapMakinesiAPK
           path: ./*.apk
