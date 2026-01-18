@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yüzde Hesaplama</title>
+    <style>
+        body { font-family: sans-serif; background-color: #f0f0f0; display: flex; justify-content: center; padding: 20px; }
+        .box { background: white; padding: 20px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); width: 100%; max-width: 350px; }
+        h2 { text-align: center; color: #444; }
+        label { display: block; margin: 10px 0 5px; color: #666; }
+        input { width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; box-sizing: border-box; font-size: 16px; margin-bottom: 10px; }
+        .ops { display: flex; justify-content: space-around; margin: 20px 0; }
+        button { width: 100%; padding: 15px; background: #e0e0e0; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 18px; }
+        .res { margin-top: 20px; font-size: 22px; font-weight: bold; text-align: center; color: #e91e63; }
+        hr { border: 1px dashed #ccc; margin: 30px 0; }
+    </style>
+</head>
+<body>
+<div class="box">
+    <h2>Yüzde Hesaplama</h2>
+    <label>Tutar:</label>
+    <input type="number" id="t1" placeholder="0">
+    <label>Yüzde:</label>
+    <input type="number" id="y1" placeholder="0">
+    <div class="ops">
+        <label><input type="radio" name="o" value="-" checked> -%</label>
+        <label><input type="radio" name="o" value="+"> +%</label>
+        <label><input type="radio" name="o" value="="> =%</label>
+    </div>
+    <button onclick="h1()">HESAPLA</button>
+    <div class="res" id="s1">Sonuç: 0</div>
+    <hr>
+    <h3>Fark Hesapla</h3>
+    <label>1. Sayı:</label>
+    <input type="number" id="n1" placeholder="100">
+    <label>2. Sayı:</label>
+    <input type="number" id="n2" placeholder="20">
+    <button onclick="h2()">FARK NEDİR?</button>
+    <div class="res" id="s2">%0</div>
+</div>
+<script>
+    function h1(){
+        let t = parseFloat(document.getElementById('t1').value)||0;
+        let y = parseFloat(document.getElementById('y1').value)||0;
+        let o = document.querySelector('input[name="o"]:checked').value;
+        let s = o==='-' ? t-(t*y/100) : o==='+' ? t+(t*y/100) : (t*y/100);
+        document.getElementById('s1').innerText = "Sonuç: " + s.toFixed(2);
+    }
+    function h2(){
+        let v1 = parseFloat(document.getElementById('n1').value)||0;
+        let v2 = parseFloat(document.getElementById('n2').value)||0;
+        if(v1===0) return;
+        let f = ((v2-v1)/v1)*100;
+        document.getElementById('s2').innerText = "%" + Math.abs(f).toFixed(1) + (f<0?" Düşüş":" Artış");
+    }
+</script>
+</body>
+</html>
